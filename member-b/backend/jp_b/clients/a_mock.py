@@ -2,6 +2,7 @@ import json
 import math
 import hashlib
 import secrets
+from decimal import Decimal
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import Dict, List, Any, Optional, Union
@@ -211,9 +212,9 @@ class AMockClient:
                 if t.tanker_id == params["tanker_id"]:
                     t.status = "unavailable"
         elif dtype == "supply_cut":
-            frac = float(params["fraction"])
-            s_current = derived.supply.tanker_water_available_litres
-            s_new = math.floor(s_current * (1.0 - frac) / 100.0) * 100
+            f = Decimal(str(params["fraction"]))
+            S = Decimal(str(derived.supply.tanker_water_available_litres))
+            s_new = math.floor(float((S * (Decimal("1") - f)) / Decimal("100"))) * 100
             derived.supply.tanker_water_available_litres = int(s_new)
         elif dtype == "heat_alert":
             new_level = int(params["alert_level"])

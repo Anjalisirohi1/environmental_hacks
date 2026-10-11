@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { ShellProvider } from "../shell/ShellContext";
@@ -10,7 +9,7 @@ import { bClient } from "../api/bClient";
 import { PlanRecord } from "../contract/types";
 
 // Mock resize observer for Recharts in jsdom
-global.ResizeObserver = class ResizeObserver {
+(globalThis as any).ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
