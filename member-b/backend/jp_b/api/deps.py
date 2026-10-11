@@ -134,6 +134,22 @@ def get_comparison_service(
         event_service=event_service,
     )
 
+from jp_b.services.replan_service import ReplanService
+
+def get_replan_service(
+    a_client: AClient = Depends(get_a_client),
+    plans_repo: PlansRepository = Depends(get_plans_repo),
+    event_service: EventService = Depends(get_event_service),
+    audit_service: AuditService = Depends(get_audit_service),
+) -> ReplanService:
+    return ReplanService(
+        a_client=a_client,
+        plans_repo=plans_repo,
+        event_service=event_service,
+        audit_service=audit_service,
+    )
+
+
 
 
 
