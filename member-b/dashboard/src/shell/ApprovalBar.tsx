@@ -6,9 +6,10 @@ import styles from "../styles/shell.module.css";
 
 interface ApprovalBarProps {
   plan: PlanRecord | null;
+  onDecisionSuccess?: (plan: PlanRecord) => void;
 }
 
-export const ApprovalBar: React.FC<ApprovalBarProps> = ({ plan }) => {
+export const ApprovalBar: React.FC<ApprovalBarProps> = ({ plan, onDecisionSuccess }) => {
   const { token, updatePlan } = useShell();
 
   const [confirmApproveOpen, setConfirmApproveOpen] = useState(false);
@@ -68,7 +69,9 @@ export const ApprovalBar: React.FC<ApprovalBarProps> = ({ plan }) => {
     setApiError(null);
     try {
       const res = await bClient.recordDecision(token, plan.plan_id, "approved", null);
-      updatePlan(res.next_plan || res.plan);
+      const nextPlan = res.next_plan || res.plan;
+      updatePlan(nextPlan);
+      if (onDecisionSuccess) onDecisionSuccess(nextPlan);
       setConfirmApproveOpen(false);
     } catch (err) {
       if (err instanceof APIClientError) {
@@ -93,7 +96,9 @@ export const ApprovalBar: React.FC<ApprovalBarProps> = ({ plan }) => {
         null,
         revisedWeights
       );
-      updatePlan(res.next_plan || res.plan);
+      const nextPlan = res.next_plan || res.plan;
+      updatePlan(nextPlan);
+      if (onDecisionSuccess) onDecisionSuccess(nextPlan);
       setEditPopoverOpen(false);
     } catch (err) {
       if (err instanceof APIClientError) {
@@ -123,7 +128,9 @@ export const ApprovalBar: React.FC<ApprovalBarProps> = ({ plan }) => {
         "rejected",
         rejectNote.trim()
       );
-      updatePlan(res.next_plan || res.plan);
+      const nextPlan = res.next_plan || res.plan;
+      updatePlan(nextPlan);
+      if (onDecisionSuccess) onDecisionSuccess(nextPlan);
       setRejectModalOpen(false);
       setRejectNote("");
     } catch (err) {
