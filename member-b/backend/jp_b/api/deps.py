@@ -102,4 +102,22 @@ def get_plan_service(
         audit_service=audit_service,
     )
 
+from jp_b.services.decision_service import DecisionService
+
+def get_decision_service(
+    plans_repo: PlansRepository = Depends(get_plans_repo),
+    plan_service: PlanService = Depends(get_plan_service),
+    ledger_service: LedgerService = Depends(get_ledger_service),
+    event_service: EventService = Depends(get_event_service),
+    audit_service: AuditService = Depends(get_audit_service),
+) -> DecisionService:
+    return DecisionService(
+        plans_repo=plans_repo,
+        plan_service=plan_service,
+        ledger_service=ledger_service,
+        event_service=event_service,
+        audit_service=audit_service,
+    )
+
+
 
