@@ -105,10 +105,12 @@ class PlanService:
                 cap_litres=settings.b_debt_cap_litres,
             )
 
-        debt_by_area = self.ledger_service.get_debt_by_area(
+        all_debt = self.ledger_service.get_debt_by_area(
             service_area_id=service_area_id,
             window_index=scenario.window_index,
         )
+        scenario_area_ids = {a.area_id for a in scenario.areas}
+        debt_by_area = {aid: all_debt.get(aid, 0) for aid in scenario_area_ids}
 
         # Step 4: Call Member A's solve endpoint
         solve_request = SolveRequest(

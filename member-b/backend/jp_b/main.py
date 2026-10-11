@@ -18,6 +18,7 @@ from jp_b.api.routes_scenarios import router as scenarios_router
 from jp_b.api.routes_ledger import router as ledger_router
 from jp_b.api.routes_plans import router as plans_router
 from jp_b.api.routes_decisions import router as decisions_router
+from jp_b.api.routes_comparisons import router as comparisons_router
 from jp_b.api.routes_weights import router as weights_router
 from jp_b.api.routes_events import router as events_router
 from jp_b.api.routes_audit import router as audit_router
@@ -56,6 +57,7 @@ app.include_router(scenarios_router)
 app.include_router(ledger_router)
 app.include_router(plans_router)
 app.include_router(decisions_router)
+app.include_router(comparisons_router)
 app.include_router(weights_router)
 app.include_router(events_router)
 app.include_router(audit_router)

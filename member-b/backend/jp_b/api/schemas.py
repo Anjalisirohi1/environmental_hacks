@@ -435,4 +435,75 @@ class PlanDecisionResponse(BaseModel):
     ledger_updated: bool
 
 
+class ComparisonRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    scenario_id: str
+    weights: Optional[Weights] = None
+
+
+class ComparisonResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: str = "1.0"
+    scenario_id: str
+    weights: Weights
+    generated_at: datetime
+    is_simulation: bool = True
+    plan_id: str
+    results: Dict[str, PlanResult]
+    metrics: Dict[str, Metrics]
+    best_by_metric: Dict[str, str]
+
+
+class ReplanRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    plan_id: str
+    disruption: Disruption
+
+
+class AreaDiff(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    area_id: str
+    litres_before: int
+    litres_after: int
+    delta: int
+    tankers_before: List[str]
+    tankers_after: List[str]
+    order_before: List[int]
+    order_after: List[int]
+    change: Literal["increased", "decreased", "unchanged", "newly_served", "dropped", "reassigned"]
+
+
+class DiffSummary(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    areas_changed: int
+    litres_moved: int
+    metrics_before: Metrics
+    metrics_after: Metrics
+
+
+class ReplanDiff(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    areas: List[AreaDiff]
+    summary: DiffSummary
+
+
+class ReplanResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: str = "1.0"
+    previous_plan_id: str
+    derived_scenario_id: str
+    disruption: Disruption
+    replanning_time_ms: int
+    new_plan: PlanRecord
+    diff: ReplanDiff
+
+
+
 

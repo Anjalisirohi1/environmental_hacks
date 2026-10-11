@@ -119,5 +119,21 @@ def get_decision_service(
         audit_service=audit_service,
     )
 
+from jp_b.services.comparison_service import ComparisonService
+
+def get_comparison_service(
+    a_client: AClient = Depends(get_a_client),
+    plan_service: PlanService = Depends(get_plan_service),
+    ledger_service: LedgerService = Depends(get_ledger_service),
+    event_service: EventService = Depends(get_event_service),
+) -> ComparisonService:
+    return ComparisonService(
+        a_client=a_client,
+        plan_service=plan_service,
+        ledger_service=ledger_service,
+        event_service=event_service,
+    )
+
+
 
 
