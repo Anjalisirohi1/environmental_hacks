@@ -140,9 +140,9 @@ Follow this workflow to verify the end-to-end capabilities with `B_USE_MOCK_A=tr
 
 ---
 
-## 6. DynamoDB Deployment Status
+## 6. AWS DynamoDB Deployment Status
 
-- **M14 Status**: `M14: not deployed`
+DynamoDB storage mode implemented and tested with moto. Deployment: at integration (EC2 + DynamoDB). M14: not deployed by Member B.
 *(Local SQLite remains the default active repository engine).*
 
 ---
