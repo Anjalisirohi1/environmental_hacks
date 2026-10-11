@@ -272,13 +272,13 @@ class PlanRecord(BaseModel):
     scenario_id: str
     service_area_id: str
     window_index: int
-    supersedes_plan_id: Optional[str]
-    replan_of_plan_id: Optional[str]
-    disruption: Optional[Disruption]
+    supersedes_plan_id: Optional[str] = None
+    replan_of_plan_id: Optional[str] = None
+    disruption: Optional[Disruption] = None
     is_synthetic: bool = True
     result: PlanResult
     metrics: Metrics
-    decision: Optional[DecisionInfo]
+    decision: Optional[DecisionInfo] = None
 
 class Event(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -346,5 +346,93 @@ class LedgerResponse(BaseModel):
     windows: List[int]
     areas: List[LedgerArea]
     totals: List[LedgerTotalPoint]
+
+
+class CreatePlanRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    scenario_id: str
+    weights: Optional[Weights] = None
+    time_limit_s: Optional[float] = Field(default=8.0, ge=0.5, le=9.5)
+
+
+class PlanListResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    plans: List[PlanRecord]
+
+
+class AuditEntry(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    audit_id: str
+    ts: datetime
+    officer_id: str
+    action: str
+    plan_id: Optional[str] = None
+    scenario_id: Optional[str] = None
+    details: Dict[str, Any] = Field(default_factory=dict)
+
+
+class AuditListResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    entries: List[AuditEntry]
+
+
+class EventTrackRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    scenario_id: Optional[str] = None
+    props: Dict[str, Any] = Field(default_factory=dict)
+
+
+class EventTrackResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    event_id: str
+
+
+class EventsListResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    events: List[Event]
+
+
+class WeightsResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    service_area_id: str
+    weights: Weights
+    updated_at: datetime
+    updated_by: str
+    flags: Dict[str, bool]
+    defaults: Weights
+    debt_policy: Dict[str, Any]
+
+
+class UpdateWeightsRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    service_area_id: str
+    weights: Weights
+
+
+class PlanDecisionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    decision: Literal["approved", "edited", "rejected"]
+    note: Optional[str] = None
+    revised_weights: Optional[Weights] = None
+
+
+class PlanDecisionResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    plan: PlanRecord
+    next_plan: Optional[PlanRecord] = None
+    ledger_updated: bool
+
 
 

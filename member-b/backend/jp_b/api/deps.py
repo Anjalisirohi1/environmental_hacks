@@ -34,13 +34,72 @@ def get_a_client() -> AClient:
         return _mock_client
     return AHttpClient()
 
-from jp_b.repositories.base import LedgerRepository
-from jp_b.repositories.sqlite_repo import SQLiteLedgerRepository
+from jp_b.repositories.base import (
+    LedgerRepository,
+    PlansRepository,
+    EventsRepository,
+    AuditRepository,
+    WeightsRepository,
+)
+from jp_b.repositories.sqlite_repo import (
+    SQLiteLedgerRepository,
+    SQLitePlansRepository,
+    SQLiteEventsRepository,
+    SQLiteAuditRepository,
+    SQLiteWeightsRepository,
+)
 from jp_b.services.ledger_service import LedgerService
+from jp_b.services.event_service import EventService
+from jp_b.services.audit_service import AuditService
+from jp_b.services.weights_service import WeightsService
+from jp_b.services.plan_service import PlanService
 
 def get_ledger_repo() -> LedgerRepository:
     return SQLiteLedgerRepository()
 
 def get_ledger_service(repo: LedgerRepository = Depends(get_ledger_repo)) -> LedgerService:
     return LedgerService(repo)
+
+def get_plans_repo() -> PlansRepository:
+    return SQLitePlansRepository()
+
+def get_events_repo() -> EventsRepository:
+    return SQLiteEventsRepository()
+
+def get_event_service(repo: EventsRepository = Depends(get_events_repo)) -> EventService:
+    return EventService(repo)
+
+def get_audit_repo() -> AuditRepository:
+    return SQLiteAuditRepository()
+
+def get_audit_service(repo: AuditRepository = Depends(get_audit_repo)) -> AuditService:
+    return AuditService(repo)
+
+def get_weights_repo() -> WeightsRepository:
+    return SQLiteWeightsRepository()
+
+def get_weights_service(
+    repo: WeightsRepository = Depends(get_weights_repo),
+    event_service: EventService = Depends(get_event_service),
+    audit_service: AuditService = Depends(get_audit_service),
+) -> WeightsService:
+    return WeightsService(repo, event_service=event_service, audit_service=audit_service)
+
+def get_plan_service(
+    a_client: AClient = Depends(get_a_client),
+    plans_repo: PlansRepository = Depends(get_plans_repo),
+    ledger_service: LedgerService = Depends(get_ledger_service),
+    weights_repo: WeightsRepository = Depends(get_weights_repo),
+    event_service: EventService = Depends(get_event_service),
+    audit_service: AuditService = Depends(get_audit_service),
+) -> PlanService:
+    return PlanService(
+        a_client=a_client,
+        plans_repo=plans_repo,
+        ledger_service=ledger_service,
+        weights_repo=weights_repo,
+        event_service=event_service,
+        audit_service=audit_service,
+    )
+
 

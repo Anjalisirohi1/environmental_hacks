@@ -77,10 +77,13 @@ class SQLitePlansRepository(PlansRepository):
         row = c.fetchone()
         return orjson.loads(row["data"]) if row else None
 
-    def list_by_scenario(self, scenario_id: str, status: Optional[str] = None, latest: bool = False) -> List[dict]:
+    def list_by_scenario(self, scenario_id: Optional[str] = None, status: Optional[str] = None, latest: bool = False) -> List[dict]:
         c = self.conn.cursor()
-        query = "SELECT data FROM jp_b_plans WHERE scenario_id = ?"
-        params = [scenario_id]
+        query = "SELECT data FROM jp_b_plans WHERE 1=1"
+        params = []
+        if scenario_id:
+            query += " AND scenario_id = ?"
+            params.append(scenario_id)
         if status:
             query += " AND status = ?"
             params.append(status)

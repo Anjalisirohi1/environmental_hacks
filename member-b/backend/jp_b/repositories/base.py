@@ -9,7 +9,7 @@ class PlansRepository(ABC):
     def get(self, plan_id: str) -> Optional[dict]: pass
     
     @abstractmethod
-    def list_by_scenario(self, scenario_id: str, status: Optional[str] = None, latest: bool = False) -> List[dict]: pass
+    def list_by_scenario(self, scenario_id: Optional[str] = None, status: Optional[str] = None, latest: bool = False) -> List[dict]: pass
 
 class LedgerRepository(ABC):
     @abstractmethod

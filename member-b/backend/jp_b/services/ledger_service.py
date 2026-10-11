@@ -61,6 +61,18 @@ class LedgerService:
 
         return created_rows
 
+    def get_debt_by_area(self, service_area_id: str, window_index: int) -> Dict[str, int]:
+        """
+        Get debt by area after window (window_index - 1) per CONTRACT §5.11 and MEMBER_B.md B2.
+        """
+        target_window = window_index - 1
+        rows = self.ledger_repo.get_all_for_service_area(service_area_id)
+        debt_by_area: Dict[str, int] = {}
+        for r in rows:
+            if int(r.get("window_index", 0)) == target_window:
+                debt_by_area[r["area_id"]] = int(r.get("debt_litres", 0))
+        return debt_by_area
+
     def update_on_approval(
         self,
         plan_data: dict,
