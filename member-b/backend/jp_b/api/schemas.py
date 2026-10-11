@@ -314,4 +314,37 @@ class ScenarioSummaryList(BaseModel):
 
     scenarios: List[ScenarioSummary]
 
+class LedgerSeriesPoint(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    window_index: int
+    debt_litres: int
+    unmet_litres: int
+    source: Literal["history", "approved_plan"]
+    plan_id: Optional[str] = None
+
+class LedgerArea(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    area_id: str
+    name: str
+    current_debt_litres: int
+    series: List[LedgerSeriesPoint]
+
+class LedgerTotalPoint(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    window_index: int
+    debt_litres: int
+
+class LedgerResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    service_area_id: str
+    decay: float
+    cap_litres: Optional[int] = None
+    windows: List[int]
+    areas: List[LedgerArea]
+    totals: List[LedgerTotalPoint]
+
 

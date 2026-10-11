@@ -34,3 +34,13 @@ def get_a_client() -> AClient:
         return _mock_client
     return AHttpClient()
 
+from jp_b.repositories.base import LedgerRepository
+from jp_b.repositories.sqlite_repo import SQLiteLedgerRepository
+from jp_b.services.ledger_service import LedgerService
+
+def get_ledger_repo() -> LedgerRepository:
+    return SQLiteLedgerRepository()
+
+def get_ledger_service(repo: LedgerRepository = Depends(get_ledger_repo)) -> LedgerService:
+    return LedgerService(repo)
+

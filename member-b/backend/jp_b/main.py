@@ -15,6 +15,7 @@ from jp_b.api.errors import (
 from jp_b.api.routes_health import router as health_router
 from jp_b.api.routes_auth import router as auth_router
 from jp_b.api.routes_scenarios import router as scenarios_router
+from jp_b.api.routes_ledger import router as ledger_router
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -47,6 +48,7 @@ app.add_exception_handler(Exception, global_exception_handler)
 app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(scenarios_router)
+app.include_router(ledger_router)
 
 
 from jp_b.api.deps import get_current_user
