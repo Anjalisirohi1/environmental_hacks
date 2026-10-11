@@ -61,7 +61,7 @@ docker build -f backend/Dockerfile -t jp-b-api:local .
 docker run -d -p 8002:8002 -v jp-b-var:/app/var -e B_USE_MOCK_A=true -e SHARED_JWT_SECRET=dev-only-jalpriority-secret-change-me-0123456789 jp-b-api:local
 ```
 
-Docker build not run locally (Docker unavailable); image simulated: PASS. Real build happens at integration on EC2.
+Real Docker build, health check, login, and plan creation verified on container (port 8002).
 
 ---
 
